@@ -1,45 +1,106 @@
 const getState = ({ getStore, getActions, setStore }) => {
-	return {
-		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
-		},
-		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
-			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+    return {
+        store: {
+            contacts: [],
+            apiBaseUrl: "https://playground.4geeks.com/contact/agendas/", 
+            formData: {
+                name: "",
+                phone: "",
+                email: "",
+                address: "",
+            },
+        },
+        // Create Update und Edit
+        actions: {
+            // Get all contacts
+            getAllContacts: async () => {
+                try {
+                    const response = await fetch(`${getStore().apiBaseUrl}ricardou/contacts`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        setStore({ contacts: data.contacts }); 
+                        console.log(data);
+                        
+                    } else {
+                        console.error("Error al obtener contactos");
+                    }
+                } catch (error) {
+                    console.error("Error de red: ", error);
+                }
+            },
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+            addContact: async (contact) => {
+                try {
+                    const response = await fetch( `${getStore().apiBaseUrl}ricardou/contacts`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(contact),
+                    });
+                    if (response.ok) {
+                        print(response)
+                    } else {
+                        console.error("Error al agregar contacto");
+                    }
+                } catch (error) {
+                    console.error("Error de red: ", error);
+                }
+            },
 
-				//reset the global store
-				setStore({ demo: demo });
-			}
-		}
-	};
+            updateContact: async (id, updatedContact) => {
+                try {
+                    const response = await fetch(`${getStore().apiBaseUrl}ricardou/contacts/${id}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(updatedContact),
+                    });
+                    if (response.ok) {
+                        getActions().getAllContacts();
+                    } else {
+                        console.error("Error al actualizar contacto");
+                    }
+                } catch (error) {
+                    console.error("Error de red: ", error);
+                }
+            },
+
+            deleteContact: async (id) => {
+                try {
+                    const response = await fetch(`${getStore().apiBaseUrl}ricardou/contacts/${id}`, {
+                        method: "DELETE",
+                    });
+                    if (response.ok) {
+                        getActions().getAllContacts();
+                    } else {
+                        console.error("Error al eliminar contacto");
+                    }
+                } catch (error) {
+                    console.error("Error de red: ", error);
+                }
+            },
+
+            updateFormData: (key, value) => {
+                const store = getStore();
+                setStore({
+                    formData: {
+                        ...store.formData,
+                        [key]: value,
+                    },
+                });
+            },
+
+            // Resetear los datos del formulario
+            resetFormData: () => {
+                setStore({
+                    formData: {
+                        name: "",  
+                        phone: "",
+                        email: "",
+                        address: "",
+                    },
+                });
+            },
+        },
+    };
 };
 
 export default getState;
