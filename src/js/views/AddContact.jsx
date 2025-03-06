@@ -30,16 +30,15 @@ const AddContact = () => {
         e.preventDefault();
         const contactData = { ...store.formData };
         if (id) {
-            actions.updateContact(id, contactData); // Update
+            actions.updateContact(id, contactData); 
         } else {
-            actions.addContact(contactData); // Add Contact
+            actions.addContact(contactData); 
         }
-        navigate("/"); // Go back
+        navigate("/"); 
     };
 
     return (
         <div className="container mt-5">
-            {/* If - then - one or another title  */}
             <h1>{id ? "Edit Contact" : "Add a new contact"}</h1>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">

@@ -5,7 +5,6 @@ import kat from "../../img/kat.jpg"
 const ContactCard = ({ contact }) => {
     const { actions } = useContext(Context);
 
-    // Solo si tengo Contactos en mi User
     return (
         <div className="card d-flex flex-row align-items-center">
             <img
@@ -14,7 +13,6 @@ const ContactCard = ({ contact }) => {
                 alt="contact"
                 style={{ width: "80px", height: "80px" }}
             />
-            {/* Verifica Store */}
             <div className="card-body">
                 <h5 className="card-title">{contact.name}</h5>
                 <p className="card-text">

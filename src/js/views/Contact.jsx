@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 const Contact = () => {
     const { store, actions } = useContext(Context);
 
-    // Solo muestrame los contactos IF y tambien cuando se actualice 
     useEffect(() => {
         if (store.contacts.length > 0) {
             console.log("Current Contacts : ", store.contacts);
